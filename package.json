@@ -1,0 +1,28 @@
+{
+  "name": "camera-node",
+  "version": "1.0.0",
+  "description": "Node controlling camera",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/OneStromberg/camera-node.git"
+  },
+  "keywords": [
+    "camera",
+    "raspberry",
+    "usb"
+  ],
+  "author": "One Stromberg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OneStromberg/camera-node/issues"
+  },
+  "homepage": "https://github.com/OneStromberg/camera-node#readme",
+  "dependencies": {
+    "pngjs": "^3.2.0",
+    "v4l2camera": "^1.0.4"
+  }
+}
