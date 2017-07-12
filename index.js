@@ -10,6 +10,7 @@ ipc.config.retry= 1500;
 ipc.connectTo(
     'world',
     function(){
+        var storageRef;
         async function initFirebase(){
 
             var config = {
@@ -22,9 +23,9 @@ ipc.connectTo(
             };
 
             await firebase.initializeApp(config);
+            storageRef = firebase.storage().ref();
         }
         initFirebase();
-        var storageRef = firebase.storage().ref();
 
         ipc.of.world.on(
             'message',  //any event or message type your server listens for
@@ -32,7 +33,9 @@ ipc.connectTo(
                 if (data.node == "board" && data.type == "api"){
                     var png = toPng();
                     var d = new Date();
-                    storageRef.child('images/' + parseInt(d.getTime() / 1000) + '.png').put(png);
+                    if(storageRef){
+                        storageRef.child('images/' + parseInt(d.getTime() / 1000) + '.png').put(png);
+                    }
                 }
             }
         );
