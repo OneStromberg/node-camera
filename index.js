@@ -1,6 +1,43 @@
 var http = require("http");
 var pngjs = require("pngjs");
 var v4l2camera = require("v4l2camera");
+var ipc  = require('node-ipc');
+var firebase = require('firebase');
+
+ipc.config.id   = 'api';
+ipc.config.retry= 1500;
+
+ipc.connectTo(
+    'world',
+    function(){
+        async function initFirebase(){
+
+            var config = {
+                apiKey: "AIzaSyDfwYRtBh8lgI10u2RvH_NC0aMPq3Jnf-M",
+                authDomain: "fresh-mint-f5125.firebaseapp.com",
+                databaseURL: "https://fresh-mint-f5125.firebaseio.com",
+                projectId: "fresh-mint-f5125",
+                storageBucket: "fresh-mint-f5125.appspot.com",
+                messagingSenderId: "638729215739"
+            };
+
+            await firebase.initializeApp(config);
+        }
+        initFirebase();
+        var storageRef = firebase.storage().ref();
+
+        ipc.of.world.on(
+            'message',  //any event or message type your server listens for
+            function(data){
+                if (data.node == "board" && data.type == "api"){
+                    var png = toPng();
+                    var d = new Date();
+                    storageRef.child('images/' + parseInt(d.getTime() / 1000) + '.png').put(png);
+                }
+            }
+        );
+    }
+);
 
 var server = http.createServer(function (req, res) {
     //console.log(req.url);
