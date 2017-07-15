@@ -2,7 +2,6 @@ var http = require("http");
 var pngjs = require("pngjs");
 var v4l2camera = require("v4l2camera");
 var ipc  = require('node-ipc');
-var firebase = require('firebase');
 
 ipc.config.id   = 'api';
 ipc.config.retry= 1500;
@@ -10,32 +9,10 @@ ipc.config.retry= 1500;
 ipc.connectTo(
     'world',
     function(){
-        var storageRef;
-        async function initFirebase(){
-
-            var config = {
-                apiKey: "AIzaSyDfwYRtBh8lgI10u2RvH_NC0aMPq3Jnf-M",
-                authDomain: "fresh-mint-f5125.firebaseapp.com",
-                databaseURL: "https://fresh-mint-f5125.firebaseio.com",
-                projectId: "fresh-mint-f5125",
-                storageBucket: "fresh-mint-f5125.appspot.com",
-                messagingSenderId: "638729215739"
-            };
-
-            await firebase.initializeApp(config);
-            storageRef = firebase.storage().ref();
-        }
-        initFirebase();
-
         ipc.of.world.on(
             'message',  //any event or message type your server listens for
             function(data){
                 if (data.node == "board" && data.type == "api"){
-                    var png = toPng();
-                    var d = new Date();
-                    if(storageRef){
-                        storageRef.child('images/' + parseInt(d.getTime() / 1000) + '.png').put(png);
-                    }
                 }
             }
         );
@@ -107,7 +84,7 @@ console.log(cam.configGet());
     console.log("YUYV camera required");
     process.exit(1);
 }*/
-cam.configSet({width: 352, height: 288});
+cam.configSet({width: 1920, height: 1080});
 cam.start();
 cam.capture(function loop() {
     cam.capture(loop);
