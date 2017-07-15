@@ -20,29 +20,12 @@ ipc.connectTo(
 );
 
 var server = http.createServer(function (req, res) {
-    //console.log(req.url);
-    if (req.url === "/") {
-        res.writeHead(200, {
-            "content-type": "text/html;charset=utf-8",
-        });
-        res.end([
-            "<!doctype html>",
-            "<html><head><meta charset='utf-8'/>",
-            "<script>(", script.toString(), ")()</script>",
-            "</head><body>",
-            "<img id='cam' width='352' height='288' />",
-            "</body></html>",
-        ].join(""));
-        return;
-    }
-    if (req.url.match(/^\/.+\.png$/)) {
-        res.writeHead(200, {
-            "content-type": "image/png",
-            "cache-control": "no-cache",
-        });
-        var png = toPng();
-        return png.pack().pipe(res);
-    }
+    res.writeHead(200, {
+        "content-type": "image/png",
+        "cache-control": "no-cache",
+    });
+    var png = toPng();
+    return png.pack().pipe(res);
 });
 server.listen(3000);
 
