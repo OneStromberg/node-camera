@@ -1,23 +1,6 @@
 var http = require("http");
 var pngjs = require("pngjs");
 var v4l2camera = require("v4l2camera");
-var ipc  = require('node-ipc');
-
-ipc.config.id   = 'api';
-ipc.config.retry= 1500;
-
-ipc.connectTo(
-    'world',
-    function(){
-        ipc.of.world.on(
-            'message',  //any event or message type your server listens for
-            function(data){
-                if (data.node == "board" && data.type == "api"){
-                }
-            }
-        );
-    }
-);
 
 var server = http.createServer(function (req, res) {
     res.writeHead(200, {
@@ -45,7 +28,7 @@ var script = function () {
     }, false);
 };
 
-var toPng = function () {
+var toPng = () => {
     var rgb = cam.toRGB();
     var png = new pngjs.PNG({
         width: cam.width, height: cam.height,
@@ -61,12 +44,7 @@ var toPng = function () {
     return png;
 };
 
-var cam = new v4l2camera.Camera("/dev/video0")
-console.log(cam.configGet());
-/*if (cam.configGet().formatName !== "YUYV") {
-    console.log("YUYV camera required");
-    process.exit(1);
-}*/
+var cam = new v4l2camera.Camera("/dev/video0");
 cam.configSet({width: 1920, height: 1080});
 cam.start();
 cam.capture(function loop() {
